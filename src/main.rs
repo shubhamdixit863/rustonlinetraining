@@ -1,4 +1,4 @@
-
+use std::mem::{drop,forget};
 
 // fn name(num:i8)->i8{
 //      2*num
@@ -36,6 +36,19 @@ fn ConvertStringBorrow(name :&mut String){
   //  println!("{:?}",name)
    name.push('d')
 }
+
+#[derive(Debug)]
+struct  Resource{
+    name:String
+}
+
+// impl Drop for Resource{
+//     fn drop(&mut self) {
+//         // file system  --->they would be doing some clean up process or may the would be calling some syscall
+//         println!("{}","clean up gets called")
+//     }
+// }
+
 
 
 fn main() {
@@ -183,14 +196,111 @@ fn main() {
     // let y=&s;
 
     // println!("{}",v);  // Display trait ,Debug trait
-  
-    
- 
     
     // 1- You can have multiple immutable references of the data
     
     // 2- you can have only mutable borrow /reference
     // 3 - immutable and mutable reference cant co exist
+    
+    //  Drop semantics 
+    
+    // Automatically drop the variable from memory once its out of scope or its moved
+    // let st=Resource{  // this struct gets memory in the heap
+    //     name:String::from("hello ")
+    // };
+    
+    // println!("{},{:?}","resource created",st);
+    
+    //drop(st)  // std mem  it automatically gets called
+    
+    // When the Drop is called 
+    
+    // 1- Variable goes out of scope
+    // 2- Ownership move to another variable
+    // 3- Ownership transferred to another function args
+    // 4- Manually just call drop(
+    
+    // let o=String::from("hello");
+    // let c=o;  // rust will drop o ,it will pop it out of stock
+    // println!("{}",o);
+    
+    // Preventing drop  std::mem::forget
+      
+    // never do this 
+    // forget(st) // Prevent drop  // this is memory leak
+    // 
+    // 
+    
+    
+    // We will talk about vectors
+    // different ways to create a vector 
+   // Vec::new()
+    
+    // vector is a descriptor of underlying array that is created on the heap memory
+    
+    
+    let mut a:Vec<i32>=Vec::with_capacity(8);  // this will create a vector with length 0 and capacity 0
+
+    println!("{}",a.len());
+     println!("{}",a.capacity()) ; // reserved value
+    let mut b=vec![];
+    println!("{:?}",b);
+    b.push(9);
+    
+    // println!("{}",b.len());
+    // println!("{}",b.capacity()) ; // reserved value
+    // 
+    // b.push(91);
+    // println!("{}",b.len());
+    // println!("{}",b.capacity()) ; // reserved value
+    // 
+    // b.push(911);
+    // println!("{}",b.len());
+    // println!("{}",b.capacity()) ; // reserved value
+    // 
+    // b.push(789);
+    // println!("{}",b.len());
+    // println!("{}",b.capacity()) ; // reserved value
+    // 
+    // b.push(7899);
+    // println!("{}",b.len());
+    // println!("{}",b.capacity()) ; // reserved value
+    
+    // capacity is just a reserved value which when filled makes the compiler re allocate the whole underlying array
+    
+    // how to iterate over vectors 
+    
+    // for loop ,nd some  functional programming
+    
+    // it returns immutable references
+    // for i in b.iter(){
+    //     println!("{}",i)
+    //     
+    // }
+
+    
+    // If we want to modify the underlying vector elements
+    // println!("{:?}",b);
+    // // it returns mutable reference
+    // for i in b.iter_mut(){
+    //     // We have to perform de reference  *pointer
+    //    *i=*i*2;  
+    //     
+    // }
+    // 
+    // println!("{:?}",b)
+    
+    // if we want to get the ownership of underlying elements
+    
+    for i in b.into_iter(){
+        println!("{}",i);
+        a.push(i)
+    }
+  //  println!("{:?}",b) wont work
+
+    println!("{:?}",a)
+
+    // We will talk about closures
 
 
 }
