@@ -239,13 +239,13 @@ fn main() {
     // vector is a descriptor of underlying array that is created on the heap memory
     
     
-    let mut a:Vec<i32>=Vec::with_capacity(8);  // this will create a vector with length 0 and capacity 0
-
-    println!("{}",a.len());
-     println!("{}",a.capacity()) ; // reserved value
-    let mut b=vec![];
-    println!("{:?}",b);
-    b.push(9);
+    // let mut a:Vec<i32>=Vec::with_capacity(8);  // this will create a vector with length 0 and capacity 0
+    // 
+    // println!("{}",a.len());
+    //  println!("{}",a.capacity()) ; // reserved value
+    // let mut b=vec![];
+    // println!("{:?}",b);
+    // b.push(9);
     
     // println!("{}",b.len());
     // println!("{}",b.capacity()) ; // reserved value
@@ -292,15 +292,89 @@ fn main() {
     
     // if we want to get the ownership of underlying elements
     
-    for i in b.into_iter(){
-        println!("{}",i);
-        a.push(i)
-    }
+    // for i in b.into_iter(){
+    //     println!("{}",i);
+    //     a.push(i)
+    // }
   //  println!("{:?}",b) wont work
 
-    println!("{:?}",a)
+    // println!("{:?}",a)
 
     // We will talk about closures
+    // closures are function ,but what happens with them is they capture their surrounding environment
+    // |args| {body}
+    // ----------immutable rference
+    // let name="Rust";
+    // 
+    // let add= |x1,y1| {
+    //     // logic here 
+    //     println!("{}",name);
+    //     x1+y1
+    // };  // closure are define
+    // 
+    // println!("{}",add(7,8))
+    
+    // capturing the environment variable using a mutable reference 
+    // 
+    // let mut count=0;
+    // 
+    // let mut increment=||{
+    //     count+=1;  // reference of environment variable count
+    //     println!("{}",count)
+    //     
+    // };
+    // 
+    // increment();
+    // println!("{}",count) ; // we can still access count here that means the count is passed as reference
+    // 
+    // 
+    // if we want to pass the ownership to the closure
+    // move keyword
+    
+   // let  mut str= String::from("hello");
+    // 
+    // let mut modify=|| {
+    //       str.push('h')  // we got a mutable reference
+    // };
+    // 
+    // modify();
+    // println!("{}",str)  // we borrowed the string 
+    
+    // we will take ownership of the str
+    // let mut own=move ||  {
+    //     str.push('j');
+    // };
+    // own();
+    
+    //println!("{}",str)  // it wont work because we are using the moved value 
+    // Rust closure implements some trait 
+    // Fn -- this trait is implemented by the closure whenever you are using the env variable as immutable reference
+    //FnMut  -- this trait is implemented by the closure whenever you are using the env variable as mutable reference
+    //FnOnce -this trait is implemented by the closure whenever you are using the env variable by taking ownership
+    
+    // Use of closure with vectors functional programming
+    
+   //  let vb=vec![1,2,-2,3,3,4,-1,-90];
+   //  // filter
+   //  // map 
+   //  // sum
+   //  
+   //  // we want to filter out all the elements greater than 0
+   //  // let y:Vec<&i32>=vb.iter().filter(|x|**x>0).collect() ;// collect will store into another vector
+   //  // 
+   //  // println!("{:?}",y);
+   // 
+   //  //let y:i32=vb.iter().filter(|x|**x>0).sum() ;// collect will store into another vector
+   //  let z:Vec<i32>=vb.iter().map(|x| *x*2).collect();
+   // println!("{:?}",z);
+    
+    //https://doc.rust-lang.org/book/ch12-02-reading-a-file.html
+    // ---->  try reading a json file //  [1,2,3,3,4,45]
+    // convert the data into vector 
+    // then filter the values that are negative
+    // write the data in a new file
+
+
 
 
 }
