@@ -1,5 +1,11 @@
-use std::mem::{drop,forget};
+mod service;
+mod controllers;
 
+use service::kafkaservice::add;
+
+use std::fs;
+use std::mem::{drop, forget};
+use serde_json;
 // fn name(num:i8)->i8{
 //      2*num
 // }
@@ -49,9 +55,18 @@ struct  Resource{
 //     }
 // }
 
-
+// mod a {
+//     pub fn foo() {}
+// }
+// mod b {
+//     pub fn foo() {
+//         super::a::foo();  // here super represents main.rs
+//     }
+// }
 
 fn main() {
+  //  use internal;
+
     // datatypes
 
     // // Integer types --->i8 ,i16,i32 ,i64,i128, u8 ,u16 ,u32 ,u64,u128
@@ -374,7 +389,28 @@ fn main() {
     // then filter the values that are negative
     // write the data in a new file
 
+    // let contents = fs::read_to_string("./data.json") // Vec<u8>
+    //     .expect("Should have been able to read the file");
+    //
+    // let vector_data:Vec<i8>=serde_json::from_str(&contents).unwrap();  // deserialization
+    //
+    //
+    // let filtered_data:Vec<i8>=vector_data.iter().filter(|x|**x>0).map(|x|*x).collect();
+    // //let y=Vec::from(contents);
+    // println!("{:?}",filtered_data);
+    // println!("{:?}",vector_data[0]);
 
+    //  -->write the data in the file
+
+    // We have to convert this string into a vector
+
+    // deserialization
+
+    // let c=add(&9,&9);
+    // println!("{}",c)
+
+
+    controllers::user_controller::publish_kafka_message()
 
 
 }
