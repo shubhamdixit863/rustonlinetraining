@@ -1,7 +1,7 @@
 mod service;
 mod controllers;
-
-use service::kafkaservice::add;
+mod entity;
+//use service::kafkaservice::add;
 
 use std::fs;
 use std::mem::{drop, forget};
@@ -410,7 +410,23 @@ fn main() {
     // println!("{}",c)
 
 
-    controllers::user_controller::publish_kafka_message()
-
+    //controllers::user_controller::publish_kafka_message()
+// let user=entity::user::User{
+//     name:String::from("john"),
+//     age:23
+// };
+//     let mut user=entity::user::User::user_data(String::from("john"),34);
+//   //  println!("user is :{:?}",user)
+//     let name=user.get_name();
+//     let age=user.get_age();
+//     user.set_name(String::from("joe"));
+//    
+//     println!("{}",name);
+//     
+    
+    let day=entity::user::Weekdays::Monday;
+    println!("{:?}",day)
+    
+    // enum ,Result and Option Enum
 
 }
