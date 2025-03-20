@@ -5,6 +5,13 @@ pub struct User{
      name: String,
      age:i32
 }
+
+// impl Debug for User{
+//     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+//         todo!()
+//     }
+// }
+
 impl User{
     // you can write associated (static functions) and methods
     
@@ -31,11 +38,38 @@ impl User{
 
 // enums  are the custom data types with possible values
 #[derive(Debug)]
-pub enum Weekdays{
-    Monday,
-    Tuesday
+pub enum Direction{
+    Up,
+    Down,
+    Left,
+    Right
+}
+// enums with values
+#[derive(Debug)]
+pub enum Vehicle{
+    Car(User),
+    Bus(f64),
+    Bike(i32),
 }
 
-impl Weekdays {
+impl Vehicle{
+    pub fn vehicle_type(&self){
+        match self {
+            Vehicle::Car(_) => {}
+            Vehicle::Bus(_) => {}
+            Vehicle::Bike(_) => {}
+        }
+        
+    }
+    
     
 }
+
+
+// Result enum is way of handling data and error in rust 
+// enum Result<T,U>{
+//     Ok(T),
+//     Err(U)
+// }
+
+

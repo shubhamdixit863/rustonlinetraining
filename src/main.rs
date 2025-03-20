@@ -6,6 +6,9 @@ mod entity;
 use std::fs;
 use std::mem::{drop, forget};
 use serde_json;
+use entity::user::{Vehicle,User};
+use crate::entity::user::Direction;
+use crate::entity::user::Direction::Up;
 // fn name(num:i8)->i8{
 //      2*num
 // }
@@ -420,13 +423,94 @@ fn main() {
 //     let name=user.get_name();
 //     let age=user.get_age();
 //     user.set_name(String::from("joe"));
-//    
+//
 //     println!("{}",name);
-//     
+//
+// 
+//     let dir=entity::user::Direction::Up;
+//    // println!("{:?}",dir);
+// 
+//     // enum ,Result and Option Enum
+// 
+//    let d= get_direction(dir);
+//     println!("{}",d);
+// 
+//     let vehicle=Vehicle::Car(User::user_data("shh".to_string(),12));
+//     vehicle.vehicle_type();
+//     println!("{:?}",vehicle);
+//     get_value(vehicle)
+//     // Up --"up"
+//     // "right"
     
-    let day=entity::user::Weekdays::Monday;
-    println!("{:?}",day)
-    
-    // enum ,Result and Option Enum
-
+    // let re=divide_num(44,0).unwrap();
+    // let re=divide_num(44,0).unwrap_or(0);
+    // let re=divide_num(44,0).unwrap_err();
+    //let re=divide_num(44,0).unwrap_or_default();
+    let re=divide_num(44,0).unwrap_or_else(|x|{
+        if x=="Cannot divide by zero"{
+            return 0;
+        }
+        return 90;
+    });
+    // match  re {
+    //     Ok(val) => {
+    //         println!("{}",val)
+    //     }
+    //     Err(err) => {
+    //         println!("{}",err)
+    //     }
+    // }
+    println!("{}",re)
 }
+fn get_value(vehicle: Vehicle){
+    match vehicle {
+        Vehicle::Car(user) => {
+            println!("user-name -{}",user.get_name())
+        }
+        Vehicle::Bus(b) => {
+            println!("{}",b)
+        }
+        Vehicle::Bike(_) => {}
+    }
+    
+}
+
+fn get_direction(direction:Direction)->String{
+   let c= match direction { 
+        Direction::Up=>{
+            String::from("up")
+        },
+        Direction::Down=>{String::from("down")}
+        Direction::Right=>{String::from("right")}
+        Direction::Left=>{String::from("left")}
+    };
+     
+     c
+}
+// options enum error handling
+
+
+
+// fn get_d()->Direction{
+//      Up
+// }
+
+
+fn divide_num(num1:i32,num2:i32)->Result<i32,String>{
+    if num2==0{
+       return  Err("Cannot divide by zero".to_string())
+    }
+    let re=num1/num2;
+    Ok(re)
+}
+
+
+
+
+//Result<Vec<Struct>,std::Error>
+
+// create a function that returns Result enum 
+//if file is successdful return the fileData in form of Vec<struct>
+// if there is error in Err ,std:Error
+
+
