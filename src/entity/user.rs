@@ -65,6 +65,10 @@ impl Vehicle{
     
 }
 
+pub struct Data{
+    pub result:Option<String>,
+}
+
 
 // Result enum is way of handling data and error in rust 
 // enum Result<T,U>{
@@ -72,4 +76,7 @@ impl Vehicle{
 //     Err(U)
 // }
 
-
+// enum Option<T>{
+//     Some(T),
+//     None
+// }
