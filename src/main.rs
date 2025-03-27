@@ -1,100 +1,175 @@
+use std::fmt::{Debug, Display};
+
+fn print_me(data:i32){
+    println!("The data is {}",data)
+
+}
+
+// Trait in rust is similar to interfaces in other languages
+// the whole purpose of trait is to have the shared behaviour
 
 
-// struct Book<'a>{
-//     title:&'a str
+// We implement something called as trait bounds
+fn print_me_generic<T:Display+Debug+PartialEq+Copy>(data:T){
+    println!("The data is {}",data)
+
+}
+
+fn print_me_generic2<T,U>(data:T,data2:U) where T:Display+Clone+Mover,U:Clone+Mover{
+    println!("The data is {}",data)
+
+}
+
+
+// fn print_me_generic_2<T:Display,U:Display>(data:T,data2:U){
+//     println!("The data is {}",data)
+//
 // }
 
-//Write a struct X with two fields: s (an Option<String> ) and i (an i32 ). Then,
-// implement the following methods for X :
-// new : takes a &str and an i32 and returns an X instance
-// take_str : takes a mutable reference to self and returns the s field of X , replacing
-// it with None
+/**
 
+fn print_me_generic_i32(data:i32){
+    println!("The data is {}",data)
 
-use std::os::macos::raw::stat;
-use std::os::unix::raw::ino_t;
-use std::path::PathBuf;
-
-struct X{
-    s:Option<String>,
-    i:i32
 }
+
+fn print_me_generic_f32(data:f32){
+    println!("The data is {}",data)
+
+}
+
+fn print_me_generic__&str(data:&str){
+    println!("The data is {}",data)
+
+}
+
+
+**/
+
+// struct Point{
+//     x:i32,
+//     y:f32
+// }
+
+trait Mover{
+    fn walk(data: String) ->String;
+}
+
 #[derive(Debug)]
-
-struct User{
-  name:String  
+struct Animal {
+    leg:i32,
+    eyes:i32
 }
 
-struct Address <'a>{  // this lifetime specifier makes sure that city variable will be there in memory till the Address object is in memory
-    city:& 'a str
-}
 
-impl <'a> Address <'a>{
-    
-}
-impl User{
-    pub fn update_name(& mut self,name:&str)->&str{
-        self.name=name.to_string();
-         self.name.as_str()
+impl Mover for Animal{
+    fn walk(data: String) -> String {
+        data
+
     }
-    
 }
 
-impl X{
-    
+fn only_mover<T:Mover>(data: T) ->T{
+    data
 }
+
+#[derive(Debug)]
+struct Point<T:Mover,U:Copy+Display>{
+    x:T,
+    y:U
+}
+
+impl <T,U> Point<T,U>{
+    fn get_x(&self)->&T{
+        return &self.x
+    }
+}
+
+impl <T,U> Mover for Point<T,U>{
+    fn walk(data: String) -> String {
+        data
+    }
+}
+
+
+// generics with enum
+
+
+enum Data<T,U>{
+    Good(T),
+    Bad(U)
+}
+
+
 fn main() {
-    // let  r;
-    // {
-    //     let x=5;
-    //     r=&x;
-    //     println!("{}",r);
-    // }
-   // 
-   // // println!("{}",r);
-   //  let a=5;
-   //  {
-   //      let b=59;
-   //      let c=part(&a,&b);
-   //      println!("{}",c)
-   // //  }
-   //  let u=yu();  // c will become dangling reference
-   //  println!("{}",u)
-    
-    // let k=hj(&8);
-    // println!("{}",k)
-    // let new_name="logan";
-    // let mut u=User{
-    //     name: "john".to_string(),
-    // };
-    // let o=u.update_name(new_name);
-    // println!("{:?}",o)
-    
-    let a=Address{
-        city: "",
+
+    // Generics  -- Basics
+    // Generics -Advanced
+    // Generics help us write reusable code
+    // Functions,structs ,enums,traits ,implementations
+
+    // print_me(9);
+    //
+    // print_me(9.0);
+    // print_me("suuu");
+    //
+    // print_me_generic(9);
+    //
+    // print_me_generic(9.8);
+    // print_me_generic("hello")
+
+    // Monomorphisation
+    //
+    let point1=Point{
+        x: 9,
+        y: 9.0,
     };
+
+
+    let point12=Point{
+        x: "string",
+        y: 9.0,
+    };
+    //
+    //
+    // let point12=Point{
+    //     x: vec![1,2,3],
+    //     y: 9.0,
+    // };
+    //
+    // let ret=point12.get_x();
+    // println!("{:?}",ret)
+    //
+    // let data:Data<String,i32>=Data::Good(String::from("hello there"));
+    //
+    // match data {
+    //     Data::Good(y) => {
+    //
+    //
+    //     }        Data::Bad(h) => {}
+    // }
+
+
+
+    //
+    // let mv:Box<dyn Mover>=Box::new(Animal{
+    //     leg: 2,
+    //     eyes: 2,
+    // // });
+    // 
+    // let an=Animal{
+    //     leg: 0,
+    //     eyes: 0,
+    // };
+  // let c=  only_mover(an);
+  //  println!("{:?}",c); 
+
+    let c=  only_mover(point1);
+    println!("{:?}",c);
+    
+    // Smart Pointers part ,Box ,Rc
+
+    
+    // Advanced ,dynamic ,trait types 
+
 }
-
-
-fn part<'a>(a:&'a i32,b:& 'a i32) ->&'a i32{  // 'a will store the lifetime of shortest of either a variable or b variable
-     b
-}
-
-// you cannot return a reference from a function
-// if you wannt to return a reference that reference should be static
-fn yu() -> & 'static i32 {
-   let y:& 'static i32=&6;
-    y
-}
-
-
-fn hj(u: &i32) -> &i32 {
-     u
-}
-
-// lifetime ellison rules
-// 1- Each parameter that is a reference gets its own distinct lifetime parameter
-// 2- IF there is exactly one input lifetime ,its assigned to all output lifetimes
-// 3 - if there are multiple input lifetimes ,but one of them is &self or &mut self ,the output lifetime will automatically is that of self
-
-// Generics ---> // Traits --->Trait ---Bounds // dynamic -->dispatch
