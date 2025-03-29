@@ -1,175 +1,131 @@
-use std::fmt::{Debug, Display};
 
-fn print_me(data:i32){
-    println!("The data is {}",data)
-
-}
-
-// Trait in rust is similar to interfaces in other languages
-// the whole purpose of trait is to have the shared behaviour
+// Trait bounds ,static dispatch vs dynamic dispatch
 
 
-// We implement something called as trait bounds
-fn print_me_generic<T:Display+Debug+PartialEq+Copy>(data:T){
-    println!("The data is {}",data)
 
-}
-
-fn print_me_generic2<T,U>(data:T,data2:U) where T:Display+Clone+Mover,U:Clone+Mover{
-    println!("The data is {}",data)
-
-}
-
-
-// fn print_me_generic_2<T:Display,U:Display>(data:T,data2:U){
-//     println!("The data is {}",data)
+// // static dispatch
+// trait Data {
+//     fn some_trait_fn(&self);
+// }
+//
+// struct FileData{
 //
 // }
-
-/**
-
-fn print_me_generic_i32(data:i32){
-    println!("The data is {}",data)
-
-}
-
-fn print_me_generic_f32(data:f32){
-    println!("The data is {}",data)
-
-}
-
-fn print_me_generic__&str(data:&str){
-    println!("The data is {}",data)
-
-}
-
-
-**/
-
-// struct Point{
-//     x:i32,
-//     y:f32
+//
+// impl Data for FileData {
+//     fn some_trait_fn(&self) {
+//         println!("{}","I got printed") ; // default implementation
+//     }
+// }
+//
+// fn read_it<T:Data+Discover+Move>(data:T) where T:Data{
+//        data.some_trait_fn();
 // }
 
-trait Mover{
-    fn walk(data: String) ->String;
+// static dispatch using impl keyword
+
+// use std::fmt::Debug;
+//
+// trait Shape{
+//      fn area(&self);
+// }
+//
+//
+// struct Circle;
+//
+// impl Shape for Circle{
+//     fn area(&self) {
+//         println!("{}","Circle area")
+//     }
+// }
+// fn print_shape(s:impl Shape){
+//      s.area();
+// }
+
+
+// Dynamic dispatch --is more a runtime thing
+
+use std::fmt::Debug;
+
+use crate::cache::cache_impl::EvictionPolicy;
+
+mod cache;
+
+trait Draw{
+    fn data(&self);
 }
+
 
 #[derive(Debug)]
-struct Animal {
-    leg:i32,
-    eyes:i32
-}
+struct Circle;
 
-
-impl Mover for Animal{
-    fn walk(data: String) -> String {
-        data
-
+impl  Draw for Circle {
+    fn data(&self) {
+       println!("{}","for circle");
     }
 }
 
-fn only_mover<T:Mover>(data: T) ->T{
-    data
-}
-
-#[derive(Debug)]
-struct Point<T:Mover,U:Copy+Display>{
-    x:T,
-    y:U
-}
-
-impl <T,U> Point<T,U>{
-    fn get_x(&self)->&T{
-        return &self.x
-    }
-}
-
-impl <T,U> Mover for Point<T,U>{
-    fn walk(data: String) -> String {
-        data
+struct Square;
+impl Draw for Square {
+    fn data(&self) {
+        println!("{}","for square");
     }
 }
 
 
-// generics with enum
+// dyanamic dispatch
+fn draw_all(shapes:Vec<Box<dyn Draw>>){
+    for shape in shapes{
+        shape.data();
+    }
 
-
-enum Data<T,U>{
-    Good(T),
-    Bad(U)
 }
 
+// Cache Eviction Strategy  // LRU // MRU  ,LFU ,FIFO
+
+// strategy design pattern;
+// fn cache_eviction(policies: Vec<Box<dyn EvictionPolicy>>){
+//     for policy in policies{
+//         policy.evict();
+//     }
+// 
+// 
+// }
+
+fn cache_eviction(policy: Box<dyn EvictionPolicy>){
+    policy.evict();
+
+}
 
 fn main() {
 
-    // Generics  -- Basics
-    // Generics -Advanced
-    // Generics help us write reusable code
-    // Functions,structs ,enums,traits ,implementations
-
-    // print_me(9);
+    // let fd=FileData{
     //
-    // print_me(9.0);
-    // print_me("suuu");
-    //
-    // print_me_generic(9);
-    //
-    // print_me_generic(9.8);
-    // print_me_generic("hello")
-
-    // Monomorphisation
-    //
-    let point1=Point{
-        x: 9,
-        y: 9.0,
-    };
-
-
-    let point12=Point{
-        x: "string",
-        y: 9.0,
-    };
-    //
-    //
-    // let point12=Point{
-    //     x: vec![1,2,3],
-    //     y: 9.0,
     // };
     //
-    // let ret=point12.get_x();
-    // println!("{:?}",ret)
-    //
-    // let data:Data<String,i32>=Data::Good(String::from("hello there"));
-    //
-    // match data {
-    //     Data::Good(y) => {
-    //
-    //
-    //     }        Data::Bad(h) => {}
-    // }
+    // read_it(fd)
 
-
-
+    // let ci=Circle;
+    // print_shape(ci);
+    // let sq=Square;
+    // let c=Circle;
     //
-    // let mv:Box<dyn Mover>=Box::new(Animal{
-    //     leg: 2,
-    //     eyes: 2,
-    // // });
-    // 
-    // let an=Animal{
-    //     leg: 0,
-    //     eyes: 0,
-    // };
-  // let c=  only_mover(an);
-  //  println!("{:?}",c); 
+    // let vec:Vec<Box<dyn Draw>>=vec![Box::new(sq),Box::new(c)];
+    // draw_all(vec);
 
-    let c=  only_mover(point1);
-    println!("{:?}",c);
+    let lru1=cache::cache_impl::LRU::new(7);
+    let lru2=cache::cache_impl::LRU::new(Circle);
+    let lru3=cache::cache_impl::LRU::new(String::from("the string data"));
+    let lfu=cache::cache_impl::LFU::new("string data");
+
+    let b=Box::new(lru3);
+    let c=Box::new(lfu);
     
-    // Smart Pointers part ,Box ,Rc
+    //
+    // let v:Vec<Box<dyn EvictionPolicy>>=vec![lru1,lru2,lru3,lfu];  
 
+    cache_eviction(b);
+ 
+// trait types
     
-    // Advanced ,dynamic ,trait types 
-
 }
