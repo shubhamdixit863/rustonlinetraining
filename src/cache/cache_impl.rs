@@ -15,10 +15,11 @@ pub struct LRU<T:Debug>{
 
 impl<T:Debug> LRU<T>{
 
-    pub fn new(data:T)->LRU<T> {
-       LRU{
-           data,
-       }
+    pub fn new(data:T)-> Box<LRU<T>> { 
+      Box::new(   LRU{
+            data,
+        })
+     
     }
 
 }
@@ -35,11 +36,12 @@ pub struct LFU <T>{
 
  impl<T:Debug> LFU<T>{
 
-    pub fn new(data:T)->LFU<T> {
-        LFU{
-            data,
-        }
-    }
+     pub fn new(data:T)-> Box<LFU<T>> {
+         Box::new(   LFU{
+             data,
+         })
+
+     }
 
 }
 
