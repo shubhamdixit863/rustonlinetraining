@@ -1,185 +1,123 @@
-use std::env;
-use std::fmt::{Display, Formatter};
-//
-//
+
+//associated types
 // trait  Data{
-//     fn data(&self);
+//     type SomeData;   // associated types
+//     fn process_data(&self)->Self::SomeData;
 // }
 //
 // struct FileData;
+//
+//
 // impl Data for FileData{
-//     fn data(&self) {
-//        println!("{}","something data")
+//     type SomeData = i32;
+//
+//     fn process_data(&self) -> Self::SomeData {
+//         return  8;
+//     }
+//
+// }
+//
+// impl Data for FileData{
+//     type SomeData = f64;
+//
+//     fn process_data(&self) -> Self::SomeData {
+//         return  8;
+//     }
+//
+// }
+
+
+
+// trait Something <T>{
+//     fn foo(&self)->T;
+//
+// }
+//
+// struct  Car;
+//
+// impl Something<i32>  for Car{
+//     fn foo(&self) -> i32 {
+//        return 90;
 //     }
 // }
 //
-// fn data<T:Data>(d:T){
-//     d.data();  // static dispatch
-//     println!("{}","hell data generic function")
-//
-// }
-//
-// trait Vehcile{
-//     fn drive(&self);
-// }
-// struct Car;
-//
-// impl Vehcile for Car{
-//     fn drive(&self) {
-//         println!("Car method gets called")
+// impl Something<f64>  for Car{
+//     fn foo(&self) -> i32 {
+//         return 90;
 //     }
 // }
-// fn foo(t:impl Vehcile){
-//     t.drive()
-// }
 //
-// fn main() {
 //
-//     // data(FileData);
-//     //
-//     // foo(Car);
 //
-//     let v:Vec<Box<dyn Vehcile>>;
-//
+// struct  Van;
+// impl Something<f64>  for Van{
+//     fn foo(&self) -> f64 {
+//          90f64
+//     }
 // }
 
-// Cache Eviction
-// LRU ,MFU
+use std::rc::Rc;
+use std::sync::Arc;
 
-trait EvictionPolicy{
-    fn evict(&self);
+struct  BigData{
+    data:[u8;1000000000]
 }
 
-struct  LFU<T>{
-    data:T
+struct Node{
+    data:i32,
+    next:Option<Box<Node>>,
 }
 
+struct LinkedList{
+    head:Node
 
-impl <T> EvictionPolicy for LFU<T> {
-    fn evict(&self) {
-        println!("{}","LFU Evicted");
-    }
 }
 
-struct MFU <T>{
-    data:T
-}
-impl <T> EvictionPolicy for MFU<T> {
-    fn evict(&self) {
-        println!("{}","MFU Evicted");
-    }
-}
+fn main(){
 
+    // let fd=FileData;
+    // println!("{}",fd.process_data());
+    // let car=Car;
+    // println!("{}",car.foo());
+    //
+    //  let van=Van;
+    // println!("{}",van.foo());
 
-// super trait 
+    // Smart pointers in rust //
+    // Box<T>
 
-trait  Printable{
-    fn print(&self);
-}
+    // let c=9;  // it will be stored in stack
+    // println!("{}",c)
 
-trait  Shape:Printable+Display+Clone{
-    fn area(&self);
-    fn print(&self);
-    
-}
+    // let c= Box::new(9);  // this will live in heap and c will contain the reference of underlying heap allocation
+    // println!("{}",c)
 
+    // let big=Box::new(BigData{
+    //     data: [0;1000000000],
+    // });
 
-struct Circle;
+    //   Box pointer
+    // when we use recursive data structure
 
-impl Printable for Circle {
-    fn print(&self) {
-        todo!()
-    }
-}
-
-impl Display for Circle {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        todo!()
-    }
-}
-
-impl Clone for Circle {
-    fn clone(&self) -> Self {
-        todo!()
-    }
-}
-
-impl Shape for Circle{
-    fn area(&self) {
-        todo!()
-    }
-
-    fn print(&self) {
-        todo!()
-    }
-}
-
-
-// marker traits
-trait Marker{}
-
-struct MyType;
-
-impl Marker for MyType{}
-
-fn check<T:Marker>(_:T){
-    
-}
-
-// Associated types 
-// Generic traits
-// ----Box ,RC Pointer , --->Implemt custom Linked  List  ,Weak Refs
-
-
-// Concurrency section
-
-// dynamic dispatch
-fn main() {
-    // let lfu=Box::new(
-    //     LFU{
-    //         data: "I am the lfu data",
-    //     }
-    // );
-    // 
-    // let mfu=Box::new(
-    //     MFU{
-    //         data: 89
-    //     }
-    // );
-    // let v:Vec<Box<dyn EvictionPolicy >>=vec![mfu,lfu];
-    // 
-    // for i in v{
-    //     i.evict()
-    // }
-    let args: Vec<String> = env::args().collect();
-    let c:i32=args[1].parse().unwrap();
-    
-    // let c: dyn EvictionPolicy =MFU{
-    //     data: 9,
+    // let ll=LinkedList{
+    //     head: Node{
+    //         data: 0,
+    //         next: Some(Box::new(Node{ data: 0, next: None })),
+    //     },
     // };
-    // let c:Box<dyn EvictionPolicy>=Box::new(
-    //     MFU{
-    //         data: (),
-    //     }
-    // );
 
-    
-    // let mut s:&dyn EvictionPolicy;
+    // Rc stands ro Reference counted pointer
+    // stored in heap
+    //it can have multiple references
+    // when the last reference gets dropped the whole data inside the heap gets dropped
+    // this is only valid for a particular thread
+    // no thread safety
+    let a=Rc::new(9);
+    let b=Rc::clone(&a);  // it wont create a new memory data and copy all the values instead what it will do ,it will just increment
+
+    // thread safety Arc  // Atomic Reference Count  // thread safe
     // 
-    // // s is a fat pointer
-    // 
-    // if c>8{
-    //     s=&MFU{
-    //         data:9,
-    //     }
-    // }else{
-    //     s=&LFU{
-    //         data:9,
-    //     }
-    // }
-    // 
-    // s.evict();
-    
-    check(MyType);
+    // let a1=Arc::new(9);
+    // let b1=Arc::clone(&a1);  // it wont create a new memory data and copy all the values instead what it will do ,it will just increment
 
 }
