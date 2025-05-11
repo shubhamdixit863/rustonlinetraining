@@ -1,123 +1,127 @@
-
-//associated types
-// trait  Data{
-//     type SomeData;   // associated types
-//     fn process_data(&self)->Self::SomeData;
-// }
-//
-// struct FileData;
-//
-//
-// impl Data for FileData{
-//     type SomeData = i32;
-//
-//     fn process_data(&self) -> Self::SomeData {
-//         return  8;
-//     }
-//
-// }
-//
-// impl Data for FileData{
-//     type SomeData = f64;
-//
-//     fn process_data(&self) -> Self::SomeData {
-//         return  8;
-//     }
-//
-// }
-
-
-
-// trait Something <T>{
-//     fn foo(&self)->T;
-//
-// }
-//
-// struct  Car;
-//
-// impl Something<i32>  for Car{
-//     fn foo(&self) -> i32 {
-//        return 90;
-//     }
-// }
-//
-// impl Something<f64>  for Car{
-//     fn foo(&self) -> i32 {
-//         return 90;
-//     }
-// }
-//
-//
-//
-// struct  Van;
-// impl Something<f64>  for Van{
-//     fn foo(&self) -> f64 {
-//          90f64
-//     }
-// }
-
-use std::rc::Rc;
-use std::sync::Arc;
-
-struct  BigData{
-    data:[u8;1000000000]
+struct Student {
+    name:String,
+    
 }
 
-struct Node{
-    data:i32,
-    next:Option<Box<Node>>,
+impl Student{
+    fn new(name:&str)->Student{  // static 
+        Self{
+            name:name.to_string(),
+        }
+    }
+    
+    fn get_name(&self) ->&str{  // method 
+        &self.name
+    }
+    
+    
 }
 
-struct LinkedList{
-    head:Node
 
+// traits  
+
+trait Studious{
+    fn study_hard(&self) ->bool;
 }
 
-fn main(){
+impl Studious for Student{
+    fn study_hard(&self) -> bool {
+        true
+    }
+}
 
-    // let fd=FileData;
-    // println!("{}",fd.process_data());
-    // let car=Car;
-    // println!("{}",car.foo());
-    //
-    //  let van=Van;
-    // println!("{}",van.foo());
+// enun 
+enum Weekdays{
+    Monday,
+    Tuesday,
+    Wednesday,
+    Thursday,
+    Friday,
+    Saturday,
+    Sunday,
+}
 
-    // Smart pointers in rust //
-    // Box<T>
 
-    // let c=9;  // it will be stored in stack
-    // println!("{}",c)
 
-    // let c= Box::new(9);  // this will live in heap and c will contain the reference of underlying heap allocation
-    // println!("{}",c)
 
-    // let big=Box::new(BigData{
-    //     data: [0;1000000000],
-    // });
+// Result and Option Enuns
 
-    //   Box pointer
-    // when we use recursive data structure
 
-    // let ll=LinkedList{
-    //     head: Node{
-    //         data: 0,
-    //         next: Some(Box::new(Node{ data: 0, next: None })),
-    //     },
-    // };
-
-    // Rc stands ro Reference counted pointer
-    // stored in heap
-    //it can have multiple references
-    // when the last reference gets dropped the whole data inside the heap gets dropped
-    // this is only valid for a particular thread
-    // no thread safety
-    let a=Rc::new(9);
-    let b=Rc::clone(&a);  // it wont create a new memory data and copy all the values instead what it will do ,it will just increment
-
-    // thread safety Arc  // Atomic Reference Count  // thread safe
+fn main() {
+    
+    // let c =9;
+    // let f=c;
     // 
-    // let a1=Arc::new(9);
-    // let b1=Arc::clone(&a1);  // it wont create a new memory data and copy all the values instead what it will do ,it will just increment
-
+    // println!("{}",f);
+    // println!("{}",c);
+    // 
+    
+    // let g= String::from("hello"); // heap
+    // let h=g;
+    // println!("{}",g);  // g gets dropped
+    // println!("{}",h);
+    
+    // copy 
+    // move 
+    // 
+    // let g= String::from("hello"); // heap
+    // let h=g.clone();
+    // println!("{}",g);  // g gets dropped
+    // println!("{}",h);
+    
+    
+    //  borrowing 
+    // 
+    // let g= String::from("hello"); // heap
+    // let h=&g;
+    // 
+    // println!("{}",h);
+    // println!("{}",g);
+    
+    // borrowing rules
+    // you can have n number of  non-mutable  references
+    // you can have only a single mutable reference
+    // you cannot have mutable and immutable reference exist together 
+    
+    let mut  k=vec![1,2,3,43];
+    let  h=& k;
+    let i=& k;
+    
+    // h.push(1);
+    // println!("{:?}", h);
+    
+  //  let c:bool;
+    
+    let st= Student::new("S");
+    
+    st.get_name();
+    st.study_hard();
+    
+    let w=Weekdays::Thursday;
+    
+    
 }
+
+fn foo() ->String{
+    
+    return "hello".to_string();
+    
+}
+
+fn Add()->Option<String>{
+    None
+    
+}
+
+fn divide(number1:i32, number2:i32)->Result<i32,String>{
+    if number1==0{
+       return  Err("Cannot divide by 0".to_string())
+    }
+    let v=number1/number2;
+    Ok(v)
+    
+}
+
+// generic 
+// Lifetimes
+// Will start with project building
