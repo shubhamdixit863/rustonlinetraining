@@ -1,127 +1,108 @@
-struct Student {
-    name:String,
-    
+// To do app
+// we will take the the task from the user
+// we will store that in memory
+// we will then print it out as well
+
+use std::fmt::Debug;
+use std::io;
+use std::io::Write;
+
+#[derive(Clone,Debug)]
+enum Priority {
+    Low,
+    Medium,
+    High,
 }
 
-impl Student{
-    fn new(name:&str)->Student{  // static 
-        Self{
-            name:name.to_string(),
-        }
+
+
+trait Task {
+    fn get_priority(&self) -> Priority;  // method
+    fn get_title(&self) -> String;
+}
+#[derive(Clone,Debug)]
+enum Status{
+    Completed,
+    Pending,
+    Aborted
+
+}
+
+#[derive(Debug)]
+struct SimpleTask{
+    title:String,
+    priority:Priority,
+    status:Status
+}
+
+// let y=get_title()
+impl Task for SimpleTask{
+    fn get_priority(&self) -> Priority{  //return  borrowed values
+        self.priority.clone()
+
+    }
+
+    fn get_title(&self) -> String{  // returning an owned value return the &str borrowed values
+        self.title.clone()
+    }
+
+
+}
+
+
+// taking the task input from user
+// Your task is try returning the Error if the user enter any other valeu for priority
+fn get_task_input()->Result<SimpleTask,String>{
+    // users input
+    print!("Enter task title:");
+    io::stdout().flush().unwrap();
+    let mut title=String::new();
+    io::stdin().read_line(&mut title).expect("Failed to read line");
+    print!("Enter task priority:");
+    io::stdout().flush().unwrap();
+ 
+    let mut priority=String::new();
+    let mut priority_val:Priority = Priority::Low;
+
+    io::stdin().read_line(&mut priority).expect("Failed to read line");
+    io::stdout().flush().unwrap();
+    match priority.trim() {
+        "low"=>priority_val=Priority::Low,
+        "medium"=>priority_val=Priority::Medium,
+        "high"=>priority_val=Priority::High,
+        _=> println!("Unknown value")
+        
     }
     
-    fn get_name(&self) ->&str{  // method 
-        &self.name
-    }
+    let mut status=Status::Pending;
     
+    let task=SimpleTask{
+        title,
+        priority: priority_val,
+        status,
+    };
+    
+    Ok(task)
+
+}
+
+fn print_task<T>(task:T) where T: Task+Debug{  // trait bounds
+    println!("{:?}",task)
+}
+
+fn main(){
+    let task=get_task_input();
+   // we will extract the Task struct from the Result enum above
+    
+    // match task{
+    //     Ok(taskValue) => {
+    //         print_task(taskValue);
+    //     }
+    //     Err(_) => {
+    //         println!("Error reading input")
+    //     }
+    // }
+    print_task(task.unwrap());
     
 }
 
-
-// traits  
-
-trait Studious{
-    fn study_hard(&self) ->bool;
-}
-
-impl Studious for Student{
-    fn study_hard(&self) -> bool {
-        true
-    }
-}
-
-// enun 
-enum Weekdays{
-    Monday,
-    Tuesday,
-    Wednesday,
-    Thursday,
-    Friday,
-    Saturday,
-    Sunday,
-}
-
-
-
-
-// Result and Option Enuns
-
-
-fn main() {
-    
-    // let c =9;
-    // let f=c;
-    // 
-    // println!("{}",f);
-    // println!("{}",c);
-    // 
-    
-    // let g= String::from("hello"); // heap
-    // let h=g;
-    // println!("{}",g);  // g gets dropped
-    // println!("{}",h);
-    
-    // copy 
-    // move 
-    // 
-    // let g= String::from("hello"); // heap
-    // let h=g.clone();
-    // println!("{}",g);  // g gets dropped
-    // println!("{}",h);
-    
-    
-    //  borrowing 
-    // 
-    // let g= String::from("hello"); // heap
-    // let h=&g;
-    // 
-    // println!("{}",h);
-    // println!("{}",g);
-    
-    // borrowing rules
-    // you can have n number of  non-mutable  references
-    // you can have only a single mutable reference
-    // you cannot have mutable and immutable reference exist together 
-    
-    let mut  k=vec![1,2,3,43];
-    let  h=& k;
-    let i=& k;
-    
-    // h.push(1);
-    // println!("{:?}", h);
-    
-  //  let c:bool;
-    
-    let st= Student::new("S");
-    
-    st.get_name();
-    st.study_hard();
-    
-    let w=Weekdays::Thursday;
-    
-    
-}
-
-fn foo() ->String{
-    
-    return "hello".to_string();
-    
-}
-
-fn Add()->Option<String>{
-    None
-    
-}
-
-fn divide(number1:i32, number2:i32)->Result<i32,String>{
-    if number1==0{
-       return  Err("Cannot divide by 0".to_string())
-    }
-    let v=number1/number2;
-    Ok(v)
-    
-}
-
-// generic 
-// Lifetimes
-// Will start with project building
