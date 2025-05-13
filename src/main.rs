@@ -15,11 +15,11 @@ enum Priority {
 }
 
 
-
 trait Task {
-    fn get_priority(&self) -> Priority;  // method
-    fn get_title(&self) -> String;
+    fn get_priority(&self) -> &Priority;  // method
+    fn get_title(&self) -> &String;
 }
+
 #[derive(Clone,Debug)]
 enum Status{
     Completed,
@@ -37,21 +37,17 @@ struct SimpleTask{
 
 // let y=get_title()
 impl Task for SimpleTask{
-    fn get_priority(&self) -> Priority{  //return  borrowed values
-        self.priority.clone()
-
+    fn get_priority(&self) -> &Priority{  //return  borrowed values
+        &self.priority
     }
 
-    fn get_title(&self) -> String{  // returning an owned value return the &str borrowed values
-        self.title.clone()
+    fn get_title(&self) -> &String{  // returning an owned value return the &str borrowed values
+        &self.title
     }
-
-
 }
 
 
 // taking the task input from user
-// Your task is try returning the Error if the user enter any other valeu for priority
 fn get_task_input()->Result<SimpleTask,String>{
     // users input
     print!("Enter task title:");
@@ -70,11 +66,10 @@ fn get_task_input()->Result<SimpleTask,String>{
         "low"=>priority_val=Priority::Low,
         "medium"=>priority_val=Priority::Medium,
         "high"=>priority_val=Priority::High,
-        _=> println!("Unknown value")
-        
+        _=> return Err(("Unkonwn Priority entered").to_string()),
     }
     
-    let mut status=Status::Pending;
+    let status=Status::Pending;
     
     let task=SimpleTask{
         title,
@@ -94,15 +89,15 @@ fn main(){
     let task=get_task_input();
    // we will extract the Task struct from the Result enum above
     
-    // match task{
-    //     Ok(taskValue) => {
-    //         print_task(taskValue);
-    //     }
-    //     Err(_) => {
-    //         println!("Error reading input")
-    //     }
-    // }
-    print_task(task.unwrap());
+    match task{
+        Ok(task_value) => {
+            print_task(task_value);
+        }
+        Err(e) => {
+            println!("Error reading input {}", e)
+        }
+    }
+    // print_task(task.unwrap());
     
 }
 
